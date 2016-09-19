@@ -43,8 +43,9 @@ set fileencodings=ucs-bom,utf-8,cp936
 set fileencoding=utf-8
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """""新文件标题""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"新建.c,.h,.sh,.java文件，自动插入文件头 
-autocmd BufNewFile *.cpp,*.[ch],*.sh,*.java exec ":call SetTitle()" 
+"新建.c,.h,.sh,.java,.py文件，自动插入文件头 
+au BufRead,BufNewFile *.py set filetype=py
+autocmd BufNewFile *.cpp,*.[ch],*.sh,*.java,*.py exec ":call SetTitle()" 
 ""定义函数SetTitle，自动插入文件头 
 func SetTitle() 
     "如果文件类型为.sh文件 
@@ -57,6 +58,16 @@ func SetTitle()
         call append(line(".")+4, "\#########################################################################") 
         call append(line(".")+5, "\#!/bin/bash") 
         call append(line(".")+6, "") 
+	elseif &filetype == 'py'
+        call setline(1,"#!/usr/bin/python") 
+		call append(line("."), "#-*- coding: utf-8 -*-")
+		call append(line(".")+1, "'''")
+        call append(line(".")+2, "\# File Name: ".expand("%")) 
+        call append(line(".")+3, "\# Author: moses") 
+        call append(line(".")+4, "\# mail: 354296290@qq.com") 
+        call append(line(".")+5, "\# Created Time: ".strftime("%c")) 
+        call append(line(".")+6, "'''") 
+        call append(line(".")+7, "") 
     else 
         call setline(1, "/*************************************************************************") 
         call append(line("."), "    > File Name: ".expand("%")) 
@@ -75,6 +86,10 @@ func SetTitle()
         call append(line(".")+6, "#include<stdio.h>")
         call append(line(".")+7, "")
     endif
+	if &filetype == 'py'
+		call append(line(".")+8, "import sys")
+        call append(line(".")+9, "")
+	endif
     "新建文件后，自动定位到文件末尾
     autocmd BufNewFile * normal G
 endfunc 
@@ -116,6 +131,8 @@ func! CompileRunGcc()
         exec "!java %<"
     elseif &filetype == 'sh'
         :!./%
+	elseif &filetype == 'py'
+		exec "python %"
     endif
 endfunc
 "C,C++的调试
@@ -290,3 +307,5 @@ let g:miniBufExplMapWindowNavVim = 1
 let g:miniBufExplMapWindowNavArrows = 1
 let g:miniBufExplMapCTabSwitchBufs = 1
 let g:miniBufExplModSelTarget = 1 
+"打开文件时，光标定位上次退出的位置
+au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm '\"")|else|exe "norm $"|endif|endif
