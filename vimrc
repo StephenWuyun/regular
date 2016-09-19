@@ -8,7 +8,7 @@
 set go=             " 不要图形按钮  
 "color asmanian2     " 设置背景主题  
 set guifont=Courier_New:h10:cANSI   " 设置字体  
-"syntax on           " 语法高亮  
+syntax on           " 语法高亮  
 autocmd InsertLeave * se nocul  " 用浅色高亮当前行  
 autocmd InsertEnter * se cul    " 用浅色高亮当前行  
 "set ruler           " 显示标尺  
@@ -283,7 +283,7 @@ let Tlist_Compart_Format = 1    " 压缩方式
 let Tlist_Exist_OnlyWindow = 1  " 如果只有一个buffer，kill窗口也kill掉buffer  
 let Tlist_File_Fold_Auto_Close = 0  " 不要关闭其他文件的tags  
 let Tlist_Enable_Fold_Column = 0    " 不要显示折叠树  
-autocmd FileType java set tags+=D:\tools\java\tags  
+"autocmd FileType java set tags+=D:\tools\java\tags  
 "autocmd FileType h,cpp,cc,c set tags+=D:\tools\cpp\tags  
 "let Tlist_Show_One_File=1            "不同时显示多个文件的tag，只显示当前文件的
 "设置tags  
@@ -307,5 +307,8 @@ let g:miniBufExplMapWindowNavVim = 1
 let g:miniBufExplMapWindowNavArrows = 1
 let g:miniBufExplMapCTabSwitchBufs = 1
 let g:miniBufExplModSelTarget = 1 
+let python_highlight_all = 1
 "打开文件时，光标定位上次退出的位置
 au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm '\"")|else|exe "norm $"|endif|endif
+"编写python文件时，自动加载python.vim，提供python语法支持
+au Syntax py runtime! syntax/python.vim
